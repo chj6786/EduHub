@@ -1,0 +1,80 @@
+package com.example.eduhub.course.domain;
+
+import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+/** 과정의 회차: 일정, 장소, 정원 (FR-02, FR-03). 상태는 setter 없이 close() 같은 메서드로만 바꾼다. */
+@Entity
+@Table(name = "course_session")
+public class CourseSession {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "course_id", nullable = false)
+  private Course course;
+
+  @Column(name = "start_date", nullable = false)
+  private LocalDate startDate;
+
+  @Column(nullable = false, length = 200)
+  private String place;
+
+  @Column(nullable = false)
+  private int capacity;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, length = 20)
+  private CourseSessionStatus status;
+
+  protected CourseSession() {}
+
+  public CourseSession(Course course, LocalDate startDate, String place, int capacity) {
+    this.course = course;
+    this.startDate = startDate;
+    this.place = place;
+    this.capacity = capacity;
+    this.status = CourseSessionStatus.OPEN;
+  }
+
+  /** 회차를 종료한다 (FR-03). */
+  public void close() {
+    this.status = CourseSessionStatus.CLOSED;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public Course getCourse() {
+    return course;
+  }
+
+  public LocalDate getStartDate() {
+    return startDate;
+  }
+
+  public String getPlace() {
+    return place;
+  }
+
+  public int getCapacity() {
+    return capacity;
+  }
+
+  public CourseSessionStatus getStatus() {
+    return status;
+  }
+}
