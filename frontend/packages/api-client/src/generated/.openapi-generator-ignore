@@ -1,0 +1,4 @@
+# 생성기가 만드는 저장소용 부가 파일은 받지 않는다.
+git_push.sh
+.gitignore
+.npmignore
