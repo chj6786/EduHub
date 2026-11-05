@@ -3,13 +3,14 @@
 build/
 out/
 bin/
-!gradle/wrapper/gradle-wrapper.jar
 *.class
 *.log
 *.jar
 *.war
 *.ear
 hs_err_pid*
+# Gradle wrapper는 커밋해야 Gradle 설치 없이 빌드된다 (*.jar보다 뒤에 둬야 적용된다)
+!**/gradle/wrapper/gradle-wrapper.jar
 
 # ===== Node =====
 node_modules/

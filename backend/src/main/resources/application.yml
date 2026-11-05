@@ -1,0 +1,22 @@
+# 모든 프로필 공통 설정. 프로필별 값은 application-{profile}.yml에 둔다.
+spring:
+  application:
+    name: eduhub
+  profiles:
+    # 프로필을 지정하지 않고 실행하면 dev로 뜬다. 테스트는 build.gradle.kts에서 test를 지정한다.
+    default: dev
+  config:
+    # 저장소 루트의 .env를 읽는다. 비밀 값은 .env에만 두고 커밋하지 않는다 (NFR-03, NFR-06).
+    import: optional:file:../.env[.properties]
+  jpa:
+    # 요청이 끝날 때까지 영속성 컨텍스트를 열어 두지 않는다. 컨트롤러·뷰에서의 지연 로딩 N+1을 막는다 (NFR-02).
+    open-in-view: false
+    hibernate:
+      # 스키마는 Flyway 마이그레이션으로만 바꾼다. Hibernate는 엔티티와 일치하는지 검사만 한다.
+      ddl-auto: validate
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

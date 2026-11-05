@@ -1,0 +1,13 @@
+# 로컬 개발용 프로필. 접속 정보는 기본값 없이 환경 변수(.env)에서만 읽는다.
+# 값이 없으면 기동이 실패하므로 설정 누락을 바로 알 수 있다.
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+# 실행되는 SQL과 바인딩 값을 로그로 본다. N+1 쿼리를 눈으로 확인하는 용도 (NFR-02).
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
