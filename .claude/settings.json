@@ -32,12 +32,12 @@
       "PowerShell(docker *)"
     ],
     "deny": [
-      "Read(./.env)",
-      "Read(**/.env)",
-      "Read(**/application-prod*.yml)",
-      "Edit(./.env)",
-      "Edit(**/.env)",
-      "Edit(**/application-prod*.yml)",
+      "Read(/.env)",
+      "Read(/**/.env)",
+      "Read(/**/application-prod*.yml)",
+      "Edit(/.env)",
+      "Edit(/**/.env)",
+      "Edit(/**/application-prod*.yml)",
       "Bash(git push --force *)",
       "Bash(git push -f *)",
       "Bash(*flywayClean*)",
