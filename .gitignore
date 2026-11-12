@@ -43,3 +43,9 @@ ehthumbs.db
 .env
 .env.*
 !.env.example
+
+# ===== Claude Code =====
+# 팀 공용 설정(settings.json, skills/, agents/)만 커밋하고 개인 설정과 작업 공간은 제외한다
+.claude/settings.local.json
+.claude/launch.json
+.claude/worktrees/
