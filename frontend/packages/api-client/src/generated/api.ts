@@ -77,6 +77,31 @@ export type CourseDetailResponseStatusEnum = typeof CourseDetailResponseStatusEn
 /**
  * 
  * @export
+ * @interface CourseRequest
+ */
+export interface CourseRequest {
+    /**
+     * 과정명
+     * @type {string}
+     * @memberof CourseRequest
+     */
+    'title': string;
+    /**
+     * 분류
+     * @type {string}
+     * @memberof CourseRequest
+     */
+    'category': string;
+    /**
+     * 설명 (선택)
+     * @type {string}
+     * @memberof CourseRequest
+     */
+    'description'?: string;
+}
+/**
+ * 
+ * @export
  * @interface CourseSummaryResponse
  */
 export interface CourseSummaryResponse {
@@ -131,6 +156,31 @@ export interface ErrorResponse {
      * @memberof ErrorResponse
      */
     'message'?: string;
+    /**
+     * 
+     * @type {Array<FieldErrorResponse>}
+     * @memberof ErrorResponse
+     */
+    'fieldErrors'?: Array<FieldErrorResponse>;
+}
+/**
+ * 
+ * @export
+ * @interface FieldErrorResponse
+ */
+export interface FieldErrorResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof FieldErrorResponse
+     */
+    'field'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FieldErrorResponse
+     */
+    'message'?: string;
 }
 /**
  * 
@@ -175,6 +225,31 @@ export interface PageResponseCourseSummaryResponse {
      * @memberof PageResponseCourseSummaryResponse
      */
     'totalElements'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface SessionRequest
+ */
+export interface SessionRequest {
+    /**
+     * 시작일 (오늘 이후)
+     * @type {string}
+     * @memberof SessionRequest
+     */
+    'startDate': string;
+    /**
+     * 장소
+     * @type {string}
+     * @memberof SessionRequest
+     */
+    'place': string;
+    /**
+     * 정원 (1~1000)
+     * @type {number}
+     * @memberof SessionRequest
+     */
+    'capacity': number;
 }
 /**
  * 
@@ -477,6 +552,574 @@ export class CourseApi extends BaseAPI {
      */
     public list(requestParameters: CourseApiListRequest = {}, options?: AxiosRequestConfig) {
         return CourseApiFp(this.configuration).list(requestParameters.keyword, requestParameters.category, requestParameters.page, requestParameters.size, requestParameters.sort, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * CourseAdminApi - axios parameter creator
+ * @export
+ */
+export const CourseAdminApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary 과정 종료 (운영 중인 회차도 함께 종료, 이미 종료됐어도 성공)
+         * @param {number} courseId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        closeCourse: async (courseId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'courseId' is not null or undefined
+            assertParamExists('closeCourse', 'courseId', courseId)
+            const localVarPath = `/api/v1/admin/courses/{courseId}/close`
+                .replace(`{${"courseId"}}`, encodeURIComponent(String(courseId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 회차 종료 (이미 종료됐어도 성공)
+         * @param {number} sessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        closeSession: async (sessionId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'sessionId' is not null or undefined
+            assertParamExists('closeSession', 'sessionId', sessionId)
+            const localVarPath = `/api/v1/admin/sessions/{sessionId}/close`
+                .replace(`{${"sessionId"}}`, encodeURIComponent(String(sessionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 과정 등록
+         * @param {CourseRequest} courseRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createCourse: async (courseRequest: CourseRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'courseRequest' is not null or undefined
+            assertParamExists('createCourse', 'courseRequest', courseRequest)
+            const localVarPath = `/api/v1/admin/courses`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(courseRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 회차 등록 (종료된 과정에는 등록할 수 없음)
+         * @param {number} courseId 
+         * @param {SessionRequest} sessionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSession: async (courseId: number, sessionRequest: SessionRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'courseId' is not null or undefined
+            assertParamExists('createSession', 'courseId', courseId)
+            // verify required parameter 'sessionRequest' is not null or undefined
+            assertParamExists('createSession', 'sessionRequest', sessionRequest)
+            const localVarPath = `/api/v1/admin/courses/{courseId}/sessions`
+                .replace(`{${"courseId"}}`, encodeURIComponent(String(courseId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(sessionRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 과정 수정 (종료된 과정은 수정할 수 없음)
+         * @param {number} courseId 
+         * @param {CourseRequest} courseRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCourse: async (courseId: number, courseRequest: CourseRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'courseId' is not null or undefined
+            assertParamExists('updateCourse', 'courseId', courseId)
+            // verify required parameter 'courseRequest' is not null or undefined
+            assertParamExists('updateCourse', 'courseRequest', courseRequest)
+            const localVarPath = `/api/v1/admin/courses/{courseId}`
+                .replace(`{${"courseId"}}`, encodeURIComponent(String(courseId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(courseRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary 회차 수정 (종료된 회차는 수정할 수 없음)
+         * @param {number} sessionId 
+         * @param {SessionRequest} sessionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateSession: async (sessionId: number, sessionRequest: SessionRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'sessionId' is not null or undefined
+            assertParamExists('updateSession', 'sessionId', sessionId)
+            // verify required parameter 'sessionRequest' is not null or undefined
+            assertParamExists('updateSession', 'sessionRequest', sessionRequest)
+            const localVarPath = `/api/v1/admin/sessions/{sessionId}`
+                .replace(`{${"sessionId"}}`, encodeURIComponent(String(sessionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(sessionRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * CourseAdminApi - functional programming interface
+ * @export
+ */
+export const CourseAdminApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = CourseAdminApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary 과정 종료 (운영 중인 회차도 함께 종료, 이미 종료됐어도 성공)
+         * @param {number} courseId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async closeCourse(courseId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CourseDetailResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.closeCourse(courseId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary 회차 종료 (이미 종료됐어도 성공)
+         * @param {number} sessionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async closeSession(sessionId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.closeSession(sessionId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary 과정 등록
+         * @param {CourseRequest} courseRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createCourse(courseRequest: CourseRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CourseDetailResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createCourse(courseRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary 회차 등록 (종료된 과정에는 등록할 수 없음)
+         * @param {number} courseId 
+         * @param {SessionRequest} sessionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createSession(courseId: number, sessionRequest: SessionRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createSession(courseId, sessionRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary 과정 수정 (종료된 과정은 수정할 수 없음)
+         * @param {number} courseId 
+         * @param {CourseRequest} courseRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateCourse(courseId: number, courseRequest: CourseRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CourseDetailResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateCourse(courseId, courseRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary 회차 수정 (종료된 회차는 수정할 수 없음)
+         * @param {number} sessionId 
+         * @param {SessionRequest} sessionRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateSession(sessionId: number, sessionRequest: SessionRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SessionResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateSession(sessionId, sessionRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * CourseAdminApi - factory interface
+ * @export
+ */
+export const CourseAdminApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = CourseAdminApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary 과정 종료 (운영 중인 회차도 함께 종료, 이미 종료됐어도 성공)
+         * @param {CourseAdminApiCloseCourseRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        closeCourse(requestParameters: CourseAdminApiCloseCourseRequest, options?: AxiosRequestConfig): AxiosPromise<CourseDetailResponse> {
+            return localVarFp.closeCourse(requestParameters.courseId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 회차 종료 (이미 종료됐어도 성공)
+         * @param {CourseAdminApiCloseSessionRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        closeSession(requestParameters: CourseAdminApiCloseSessionRequest, options?: AxiosRequestConfig): AxiosPromise<SessionResponse> {
+            return localVarFp.closeSession(requestParameters.sessionId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 과정 등록
+         * @param {CourseAdminApiCreateCourseRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createCourse(requestParameters: CourseAdminApiCreateCourseRequest, options?: AxiosRequestConfig): AxiosPromise<CourseDetailResponse> {
+            return localVarFp.createCourse(requestParameters.courseRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 회차 등록 (종료된 과정에는 등록할 수 없음)
+         * @param {CourseAdminApiCreateSessionRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSession(requestParameters: CourseAdminApiCreateSessionRequest, options?: AxiosRequestConfig): AxiosPromise<SessionResponse> {
+            return localVarFp.createSession(requestParameters.courseId, requestParameters.sessionRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 과정 수정 (종료된 과정은 수정할 수 없음)
+         * @param {CourseAdminApiUpdateCourseRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateCourse(requestParameters: CourseAdminApiUpdateCourseRequest, options?: AxiosRequestConfig): AxiosPromise<CourseDetailResponse> {
+            return localVarFp.updateCourse(requestParameters.courseId, requestParameters.courseRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary 회차 수정 (종료된 회차는 수정할 수 없음)
+         * @param {CourseAdminApiUpdateSessionRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateSession(requestParameters: CourseAdminApiUpdateSessionRequest, options?: AxiosRequestConfig): AxiosPromise<SessionResponse> {
+            return localVarFp.updateSession(requestParameters.sessionId, requestParameters.sessionRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for closeCourse operation in CourseAdminApi.
+ * @export
+ * @interface CourseAdminApiCloseCourseRequest
+ */
+export interface CourseAdminApiCloseCourseRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof CourseAdminApiCloseCourse
+     */
+    readonly courseId: number
+}
+
+/**
+ * Request parameters for closeSession operation in CourseAdminApi.
+ * @export
+ * @interface CourseAdminApiCloseSessionRequest
+ */
+export interface CourseAdminApiCloseSessionRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof CourseAdminApiCloseSession
+     */
+    readonly sessionId: number
+}
+
+/**
+ * Request parameters for createCourse operation in CourseAdminApi.
+ * @export
+ * @interface CourseAdminApiCreateCourseRequest
+ */
+export interface CourseAdminApiCreateCourseRequest {
+    /**
+     * 
+     * @type {CourseRequest}
+     * @memberof CourseAdminApiCreateCourse
+     */
+    readonly courseRequest: CourseRequest
+}
+
+/**
+ * Request parameters for createSession operation in CourseAdminApi.
+ * @export
+ * @interface CourseAdminApiCreateSessionRequest
+ */
+export interface CourseAdminApiCreateSessionRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof CourseAdminApiCreateSession
+     */
+    readonly courseId: number
+
+    /**
+     * 
+     * @type {SessionRequest}
+     * @memberof CourseAdminApiCreateSession
+     */
+    readonly sessionRequest: SessionRequest
+}
+
+/**
+ * Request parameters for updateCourse operation in CourseAdminApi.
+ * @export
+ * @interface CourseAdminApiUpdateCourseRequest
+ */
+export interface CourseAdminApiUpdateCourseRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof CourseAdminApiUpdateCourse
+     */
+    readonly courseId: number
+
+    /**
+     * 
+     * @type {CourseRequest}
+     * @memberof CourseAdminApiUpdateCourse
+     */
+    readonly courseRequest: CourseRequest
+}
+
+/**
+ * Request parameters for updateSession operation in CourseAdminApi.
+ * @export
+ * @interface CourseAdminApiUpdateSessionRequest
+ */
+export interface CourseAdminApiUpdateSessionRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof CourseAdminApiUpdateSession
+     */
+    readonly sessionId: number
+
+    /**
+     * 
+     * @type {SessionRequest}
+     * @memberof CourseAdminApiUpdateSession
+     */
+    readonly sessionRequest: SessionRequest
+}
+
+/**
+ * CourseAdminApi - object-oriented interface
+ * @export
+ * @class CourseAdminApi
+ * @extends {BaseAPI}
+ */
+export class CourseAdminApi extends BaseAPI {
+    /**
+     * 
+     * @summary 과정 종료 (운영 중인 회차도 함께 종료, 이미 종료됐어도 성공)
+     * @param {CourseAdminApiCloseCourseRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CourseAdminApi
+     */
+    public closeCourse(requestParameters: CourseAdminApiCloseCourseRequest, options?: AxiosRequestConfig) {
+        return CourseAdminApiFp(this.configuration).closeCourse(requestParameters.courseId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 회차 종료 (이미 종료됐어도 성공)
+     * @param {CourseAdminApiCloseSessionRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CourseAdminApi
+     */
+    public closeSession(requestParameters: CourseAdminApiCloseSessionRequest, options?: AxiosRequestConfig) {
+        return CourseAdminApiFp(this.configuration).closeSession(requestParameters.sessionId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 과정 등록
+     * @param {CourseAdminApiCreateCourseRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CourseAdminApi
+     */
+    public createCourse(requestParameters: CourseAdminApiCreateCourseRequest, options?: AxiosRequestConfig) {
+        return CourseAdminApiFp(this.configuration).createCourse(requestParameters.courseRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 회차 등록 (종료된 과정에는 등록할 수 없음)
+     * @param {CourseAdminApiCreateSessionRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CourseAdminApi
+     */
+    public createSession(requestParameters: CourseAdminApiCreateSessionRequest, options?: AxiosRequestConfig) {
+        return CourseAdminApiFp(this.configuration).createSession(requestParameters.courseId, requestParameters.sessionRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 과정 수정 (종료된 과정은 수정할 수 없음)
+     * @param {CourseAdminApiUpdateCourseRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CourseAdminApi
+     */
+    public updateCourse(requestParameters: CourseAdminApiUpdateCourseRequest, options?: AxiosRequestConfig) {
+        return CourseAdminApiFp(this.configuration).updateCourse(requestParameters.courseId, requestParameters.courseRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary 회차 수정 (종료된 회차는 수정할 수 없음)
+     * @param {CourseAdminApiUpdateSessionRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CourseAdminApi
+     */
+    public updateSession(requestParameters: CourseAdminApiUpdateSessionRequest, options?: AxiosRequestConfig) {
+        return CourseAdminApiFp(this.configuration).updateSession(requestParameters.sessionId, requestParameters.sessionRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

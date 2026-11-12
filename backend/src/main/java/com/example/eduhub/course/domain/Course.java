@@ -1,5 +1,6 @@
 package com.example.eduhub.course.domain;
 
+import com.example.eduhub.common.error.ConflictException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -40,9 +41,28 @@ public class Course {
     this.status = CourseStatus.OPEN;
   }
 
-  /** 과정을 종료한다 (FR-03). */
+  /** 제목·분류·설명을 바꾼다. 종료된 과정은 바꿀 수 없다 (FR-03). */
+  public void update(String title, String category, String description) {
+    ensureOpen();
+    this.title = title;
+    this.category = category;
+    this.description = description;
+  }
+
+  /** 과정을 종료한다. 이미 종료됐으면 아무것도 하지 않는다 (FR-03). 회차 종료는 서비스가 함께 처리한다(D-03). */
   public void close() {
     this.status = CourseStatus.CLOSED;
+  }
+
+  public boolean isClosed() {
+    return status == CourseStatus.CLOSED;
+  }
+
+  /** 종료된 과정이면 COURSE_CLOSED(409). 수정과 회차 등록 전에 확인한다 (FR-03). */
+  public void ensureOpen() {
+    if (isClosed()) {
+      throw new ConflictException("COURSE_CLOSED", "종료된 과정입니다. id=" + id);
+    }
   }
 
   public Long getId() {

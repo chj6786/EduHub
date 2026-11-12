@@ -1,5 +1,6 @@
 package com.example.eduhub.course.domain;
 
+import com.example.eduhub.common.error.ConflictException;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,7 +50,21 @@ public class CourseSession {
     this.status = CourseSessionStatus.OPEN;
   }
 
-  /** 회차를 종료한다 (FR-03). */
+  /**
+   * 일정·장소·정원을 바꾼다. 종료된 회차는 바꿀 수 없다 (FR-03).
+   *
+   * <p>TODO(FR-04): 수강 신청이 생기면 정원을 확정 인원보다 작게 줄이지 못하게 막는다.
+   */
+  public void update(LocalDate startDate, String place, int capacity) {
+    if (status == CourseSessionStatus.CLOSED) {
+      throw new ConflictException("SESSION_CLOSED", "종료된 회차입니다. id=" + id);
+    }
+    this.startDate = startDate;
+    this.place = place;
+    this.capacity = capacity;
+  }
+
+  /** 회차를 종료한다. 이미 종료됐으면 아무것도 하지 않는다 (FR-03). */
   public void close() {
     this.status = CourseSessionStatus.CLOSED;
   }
