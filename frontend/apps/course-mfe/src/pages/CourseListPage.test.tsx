@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useCourses } from '../hooks/useCourses';
 import CourseListPage from './CourseListPage';
@@ -51,6 +52,25 @@ describe('CourseListPage', () => {
 
     expect(screen.getByRole('alert')).toHaveTextContent('과정 목록을 불러오지 못했습니다. (Network Error)');
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
+  });
+
+  it('행을 클릭하면 과정 id를 넘긴다', async () => {
+    useCoursesMock.mockReturnValue({
+      data: {
+        content: [{ id: 7, title: 'JPA 기초', category: '개발', status: 'OPEN' }],
+        page: 0,
+        size: 20,
+        totalElements: 1,
+      },
+      loading: false,
+      error: null,
+    });
+    const onSelectCourse = vi.fn();
+
+    render(<CourseListPage onSelectCourse={onSelectCourse} />);
+    await userEvent.click(screen.getByRole('cell', { name: 'JPA 기초' }));
+
+    expect(onSelectCourse).toHaveBeenCalledWith(7);
   });
 
   it('불러오는 중에는 로딩 표시를 보여준다', () => {

@@ -22,17 +22,18 @@ import {
 } from '@mui/material';
 import { type FormEvent, useState } from 'react';
 import { CATEGORIES } from '../constants/categories';
+import { STATUS_LABELS } from '../constants/status';
 import { useCourses } from '../hooks/useCourses';
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50];
 
-const STATUS_LABELS: Record<string, string> = {
-  OPEN: '운영중',
-  CLOSED: '종료',
-};
+export interface CourseListPageProps {
+  /** 행을 고르면 과정 id를 넘긴다 (FR-02 상세로 이동). */
+  onSelectCourse?: (courseId: number) => void;
+}
 
 /** 과정 목록 화면 (FR-01). 데이터는 useCourses로만 가져온다. */
-export default function CourseListPage() {
+export default function CourseListPage({ onSelectCourse }: CourseListPageProps = {}) {
   const [keywordInput, setKeywordInput] = useState('');
   const [keyword, setKeyword] = useState('');
   const [category, setCategory] = useState('');
@@ -119,7 +120,16 @@ export default function CourseListPage() {
                   </TableRow>
                 ) : (
                   courses.map((course) => (
-                    <TableRow key={course.id} hover>
+                    <TableRow
+                      key={course.id}
+                      hover
+                      tabIndex={onSelectCourse ? 0 : undefined}
+                      sx={onSelectCourse ? { cursor: 'pointer' } : undefined}
+                      onClick={() => course.id != null && onSelectCourse?.(course.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && course.id != null) onSelectCourse?.(course.id);
+                      }}
+                    >
                       <TableCell>{course.title}</TableCell>
                       <TableCell>{course.category}</TableCell>
                       <TableCell>
