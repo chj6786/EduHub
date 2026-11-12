@@ -8,6 +8,8 @@ export interface UseCoursesParams {
   /** 0부터 시작. 받은 값을 그대로 API에 넘긴다 (백엔드 Pageable, MUI TablePagination 모두 0부터). */
   page: number;
   size: number;
+  /** 바꾸면 같은 조건으로 다시 불러온다. 관리자 화면에서 등록·수정 뒤에 쓴다 (FR-03). */
+  refreshKey?: number;
 }
 
 export interface UseCoursesResult {
@@ -17,7 +19,7 @@ export interface UseCoursesResult {
 }
 
 /** 과정 목록 조회 (FR-01). 화면 컴포넌트는 courseApi 대신 이 훅을 쓴다. */
-export function useCourses({ keyword, category, page, size }: UseCoursesParams): UseCoursesResult {
+export function useCourses({ keyword, category, page, size, refreshKey }: UseCoursesParams): UseCoursesResult {
   const [data, setData] = useState<PageResponseCourseSummaryResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -43,7 +45,7 @@ export function useCourses({ keyword, category, page, size }: UseCoursesParams):
     return () => {
       ignore = true;
     };
-  }, [keyword, category, page, size]);
+  }, [keyword, category, page, size, refreshKey]);
 
   return { data, loading, error };
 }

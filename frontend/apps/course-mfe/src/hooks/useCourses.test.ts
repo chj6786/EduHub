@@ -47,6 +47,20 @@ describe('useCourses', () => {
     expect(listMock).toHaveBeenCalledWith({ keyword: undefined, category: undefined, page: 0, size: 20 });
   });
 
+  it('refreshKey가 바뀌면 같은 조건으로 다시 불러온다', async () => {
+    listMock.mockResolvedValue({ data: page } as Awaited<ReturnType<typeof courseApi.list>>);
+
+    const { result, rerender } = renderHook((props: { refreshKey: number }) =>
+      useCourses({ page: 0, size: 20, refreshKey: props.refreshKey }),
+    { initialProps: { refreshKey: 0 } });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    rerender({ refreshKey: 1 });
+    await waitFor(() => expect(listMock).toHaveBeenCalledTimes(2));
+    // refreshKey는 API로 보내지 않는다.
+    expect(listMock).toHaveBeenLastCalledWith({ keyword: undefined, category: undefined, page: 0, size: 20 });
+  });
+
   it('실패하면 error를 채운다', async () => {
     listMock.mockRejectedValue(new Error('Network Error'));
 
